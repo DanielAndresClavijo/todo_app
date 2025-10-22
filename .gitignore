@@ -7,8 +7,6 @@
 .buildlog/
 .history
 
-
-
 # Flutter repo-specific
 /bin/cache/
 /bin/internal/bootstrap.bat
@@ -117,3 +115,98 @@ app.*.symbols
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
+
+# FVM Version Cache
+.fvm/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+.loadpath
+.recommenders/
+
+# Environment variables and sensitive data
+.env
+.env.local
+.env.*.local
+*.env
+config.json
+secrets.json
+firebase_options.dart
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Log files
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS-specific files
+Thumbs.db
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# Test coverage and reports
+coverage/
+test_coverage/
+*.lcov
+.test_coverage/
+
+# Build outputs and cache
+dist/
+out/
+.dart_tool/
+.packages
+build/
+*.js_
+*.js.deps
+*.js.map
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Gradle
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+# Cache files
+*.hprof
+.externalNativeBuild
+.cxx/
+
+# Keystore files (important for security)
+*.keystore
+*.jks
+key.properties
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Temporary files
+tmp/
+temp/
+.tmp/
