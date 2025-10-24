@@ -4,6 +4,7 @@ import 'package:todo_app/features/tasks/domain/entities/task.dart';
 import 'package:todo_app/features/tasks/domain/usecases/get_tasks.dart';
 import 'package:todo_app/features/tasks/domain/usecases/create_task.dart';
 import 'package:todo_app/features/tasks/domain/usecases/update_task.dart';
+import 'package:todo_app/features/tasks/domain/usecases/delete_task.dart';
 import 'package:todo_app/config/providers.dart';
 
 /// Estados posibles para las tareas
@@ -50,21 +51,39 @@ class TaskState {
 }
 
 /// Filtros disponibles para las tareas
-enum TaskFilter { all, completed, pending }
+enum TaskFilter { 
+  all,
+  completed,
+  pending;
+
+  String get displayName {
+    switch (this) {
+      case TaskFilter.all:
+        return 'Todas';
+      case TaskFilter.completed:
+        return 'Completadas';
+      case TaskFilter.pending:
+        return 'Pendientes';
+    }
+  }
+}
 
 /// Notifier para gestionar el estado de las tareas
 class TaskNotifier extends StateNotifier<TaskState> {
   final GetTasks _getTasks;
   final CreateTask _createTask;
   final UpdateTask _updateTask;
+  final DeleteTask _deleteTask;
 
   TaskNotifier({
     required GetTasks getTasks,
     required CreateTask createTask,
     required UpdateTask updateTask,
+    required DeleteTask deleteTask,
   })  : _getTasks = getTasks,
         _createTask = createTask,
         _updateTask = updateTask,
+        _deleteTask = deleteTask,
         super(TaskState(status: TaskStatus.initial, tasks: []));
 
   /// Carga todas las tareas
@@ -183,6 +202,31 @@ class TaskNotifier extends StateNotifier<TaskState> {
       },
     );
   }
+
+  /// Elimina una tarea
+  Future<void> deleteTask(int taskId) async {
+    final result = await _deleteTask(taskId);
+
+    result.fold(
+      (failure) => state = state.copyWith(
+        status: TaskStatus.error,
+        errorMessage: failure.when(
+          server: (msg) => msg,
+          cache: (msg) => msg,
+          network: (msg) => msg,
+          database: (msg) => msg,
+        ),
+      ),
+      (_) {
+        final updatedTasks = state.tasks.where((t) => t.id != taskId).toList();
+        
+        state = state.copyWith(
+          status: TaskStatus.loaded,
+          tasks: updatedTasks,
+        );
+      },
+    );
+  }
 }
 
 /// Provider del TaskNotifier
@@ -190,10 +234,12 @@ final taskNotifierProvider = StateNotifierProvider<TaskNotifier, TaskState>((ref
   final getTasks = ref.watch(getTasksUseCaseProvider);
   final createTask = ref.watch(createTaskUseCaseProvider);
   final updateTask = ref.watch(updateTaskUseCaseProvider);
+  final deleteTask = ref.watch(deleteTaskUseCaseProvider);
 
   return TaskNotifier(
     getTasks: getTasks,
     createTask: createTask,
     updateTask: updateTask,
+    deleteTask: deleteTask,
   );
 });

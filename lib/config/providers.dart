@@ -15,6 +15,7 @@ import 'package:todo_app/features/tasks/domain/usecases/create_task.dart';
 import 'package:todo_app/features/tasks/domain/usecases/get_tasks.dart';
 import 'package:todo_app/features/tasks/domain/usecases/get_tasks_by_status.dart';
 import 'package:todo_app/features/tasks/domain/usecases/update_task.dart';
+import 'package:todo_app/features/tasks/domain/usecases/delete_task.dart';
 
 // ============ Core Providers ============
 
@@ -84,6 +85,12 @@ final createTaskUseCaseProvider = Provider<CreateTask>((ref) {
 final updateTaskUseCaseProvider = Provider<UpdateTask>((ref) {
   final repository = ref.watch(taskRepositoryProvider);
   return UpdateTask(repository);
+});
+
+/// Provider de DeleteTask UseCase
+final deleteTaskUseCaseProvider = Provider<DeleteTask>((ref) {
+  final repository = ref.watch(taskRepositoryProvider);
+  return DeleteTask(repository);
 });
 
 // ============ Country Providers ============
