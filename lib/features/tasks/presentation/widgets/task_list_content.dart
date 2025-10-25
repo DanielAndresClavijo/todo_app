@@ -139,11 +139,13 @@ class TaskListContent extends ConsumerWidget {
 
     return ListView.builder(
       itemCount: tasks.length,
+      cacheExtent: 100,
       itemBuilder: (context, index) {
         final task = tasks[index];
         final isSelected = selectedTask?.id == task.id;
 
         return _TaskListItem(
+          key: ValueKey(task.id),
           task: task,
           isSelected: isSelected,
           onTap: () => onTaskTap?.call(task),
@@ -161,6 +163,7 @@ class _TaskListItem extends StatelessWidget {
   final VoidCallback onToggle;
 
   const _TaskListItem({
+    super.key,
     required this.task,
     required this.isSelected,
     required this.onTap,
@@ -201,6 +204,8 @@ class _TaskListItem extends StatelessWidget {
         ),
         title: Text(
           task.title,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             decoration: task.completed ? TextDecoration.lineThrough : null,
             color: task.completed

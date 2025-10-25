@@ -57,19 +57,23 @@ class _TaskFormContentState extends ConsumerState<TaskFormContent> {
         savedTask = updatedTask;
       } else {
         // Crear nueva tarea
-        await ref.read(taskNotifierProvider.notifier).createNewTask(_titleController.text.trim());
+        final title = _titleController.text.trim();
+        await ref.read(taskNotifierProvider.notifier).createNewTask(title);
         
-        // Obtener la tarea recién creada del estado
+        // Esperar un frame para que el estado se actualice
+        await Future.delayed(Duration.zero);
+        
+        // Obtener la tarea recién creada del estado (está al inicio de la lista)
         final taskState = ref.read(taskNotifierProvider);
-        if (taskState.tasks.isNotEmpty) {
-          savedTask = taskState.tasks.last;
-        }
+        // Buscar por título ya que es la tarea recién creada
+        savedTask = taskState.tasks.firstWhere(
+          (task) => task.title == title,
+          orElse: () => taskState.tasks.first,
+        );
       }
 
       if (mounted) {
-        if (widget.onSaved != null && savedTask != null) {
-          widget.onSaved!(savedTask);
-        }
+        widget.onSaved?.call(savedTask);
         Navigator.pop(context, savedTask);
       }
     } catch (e) {

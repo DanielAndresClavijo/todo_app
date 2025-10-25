@@ -24,10 +24,7 @@ class TaskDetailPanel extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         border: Border(
-          left: BorderSide(
-            color: Theme.of(context).dividerColor,
-            width: 1,
-          ),
+          left: BorderSide(color: Theme.of(context).dividerColor, width: 1),
         ),
       ),
       child: Column(
@@ -80,11 +77,7 @@ class TaskDetailPanel extends StatelessWidget {
                 const SizedBox(height: 24),
 
                 // ID
-                _DetailRow(
-                  icon: Icons.tag,
-                  label: 'ID',
-                  value: '${task.id}',
-                ),
+                _DetailRow(icon: Icons.tag, label: 'ID', value: '${task.id}'),
                 const SizedBox(height: 16),
 
                 // Usuario ID
@@ -97,8 +90,8 @@ class TaskDetailPanel extends StatelessWidget {
 
                 // Estado
                 _DetailRow(
-                  icon: task.completed 
-                      ? Icons.check_circle 
+                  icon: task.completed
+                      ? Icons.check_circle
                       : Icons.radio_button_unchecked,
                   label: 'Estado',
                   value: task.completed ? 'Completada' : 'Pendiente',
@@ -128,13 +121,13 @@ class TaskDetailPanel extends StatelessWidget {
                   child: FilledButton.icon(
                     onPressed: onToggleComplete,
                     icon: Icon(
-                      task.completed 
-                          ? Icons.check_circle 
+                      task.completed
+                          ? Icons.check_circle
                           : Icons.radio_button_unchecked,
                     ),
                     label: Text(
-                      task.completed 
-                          ? 'Marcar como pendiente' 
+                      task.completed
+                          ? 'Marcar como pendiente'
                           : 'Marcar como completada',
                     ),
                     style: FilledButton.styleFrom(
@@ -157,19 +150,50 @@ class TaskDetailPanel extends StatelessWidget {
                 ),
               ),
             ),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(
-                onPressed: onDelete,
-                icon: const Icon(Icons.delete_outline),
-                tooltip: 'Eliminar tarea',
-                color: Theme.of(context).colorScheme.error,
-              ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    task.updatedAt != null
+                        ? 'Actualizado el ${task.updatedAt!.day} de ${_monthName(task.updatedAt!.month)} de ${task.updatedAt!.year} - ${task.updatedAt!.hour.toString().padLeft(2, '0')}:${task.updatedAt!.minute.toString().padLeft(2, '0')}'
+                        : task.createdAt != null
+                        ? 'Creado el ${task.createdAt!.day} de ${_monthName(task.createdAt!.month)} de ${task.createdAt!.year} - ${task.createdAt!.hour.toString().padLeft(2, '0')}:${task.createdAt!.minute.toString().padLeft(2, '0')}'
+                        : '',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: onDelete,
+                  icon: const Icon(Icons.delete_outline),
+                  tooltip: 'Eliminar tarea',
+                  color: Theme.of(context).colorScheme.error,
+                ),
+              ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  String _monthName(int month) {
+    const monthNames = [
+      'Ene.',
+      'Feb.',
+      'Mar.',
+      'Abr.',
+      'May.',
+      'Jun.',
+      'Jul.',
+      'Ago.',
+      'Sep.',
+      'Oct.',
+      'Nov.',
+      'Dic.',
+    ];
+    return monthNames[month - 1];
   }
 }
 

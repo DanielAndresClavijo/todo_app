@@ -21,6 +21,8 @@ mixin _$Task {
   int get userId => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   bool get completed => throw _privateConstructorUsedError;
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
 
   /// Create a copy of Task
   /// with the given fields replaced by the non-null parameter values.
@@ -33,7 +35,14 @@ abstract class $TaskCopyWith<$Res> {
   factory $TaskCopyWith(Task value, $Res Function(Task) then) =
       _$TaskCopyWithImpl<$Res, Task>;
   @useResult
-  $Res call({int id, int userId, String title, bool completed});
+  $Res call({
+    int id,
+    int userId,
+    String title,
+    bool completed,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  });
 }
 
 /// @nodoc
@@ -55,6 +64,8 @@ class _$TaskCopyWithImpl<$Res, $Val extends Task>
     Object? userId = null,
     Object? title = null,
     Object? completed = null,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -74,6 +85,14 @@ class _$TaskCopyWithImpl<$Res, $Val extends Task>
                 ? _value.completed
                 : completed // ignore: cast_nullable_to_non_nullable
                       as bool,
+            createdAt: freezed == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            updatedAt: freezed == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
           )
           as $Val,
     );
@@ -88,7 +107,14 @@ abstract class _$$TaskImplCopyWith<$Res> implements $TaskCopyWith<$Res> {
   ) = __$$TaskImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, int userId, String title, bool completed});
+  $Res call({
+    int id,
+    int userId,
+    String title,
+    bool completed,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  });
 }
 
 /// @nodoc
@@ -107,6 +133,8 @@ class __$$TaskImplCopyWithImpl<$Res>
     Object? userId = null,
     Object? title = null,
     Object? completed = null,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(
       _$TaskImpl(
@@ -126,6 +154,14 @@ class __$$TaskImplCopyWithImpl<$Res>
             ? _value.completed
             : completed // ignore: cast_nullable_to_non_nullable
                   as bool,
+        createdAt: freezed == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        updatedAt: freezed == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
       ),
     );
   }
@@ -139,6 +175,8 @@ class _$TaskImpl implements _Task {
     required this.userId,
     required this.title,
     required this.completed,
+    this.createdAt,
+    this.updatedAt,
   });
 
   @override
@@ -149,10 +187,14 @@ class _$TaskImpl implements _Task {
   final String title;
   @override
   final bool completed;
+  @override
+  final DateTime? createdAt;
+  @override
+  final DateTime? updatedAt;
 
   @override
   String toString() {
-    return 'Task(id: $id, userId: $userId, title: $title, completed: $completed)';
+    return 'Task(id: $id, userId: $userId, title: $title, completed: $completed, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -164,11 +206,23 @@ class _$TaskImpl implements _Task {
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.completed, completed) ||
-                other.completed == completed));
+                other.completed == completed) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, userId, title, completed);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    userId,
+    title,
+    completed,
+    createdAt,
+    updatedAt,
+  );
 
   /// Create a copy of Task
   /// with the given fields replaced by the non-null parameter values.
@@ -185,6 +239,8 @@ abstract class _Task implements Task {
     required final int userId,
     required final String title,
     required final bool completed,
+    final DateTime? createdAt,
+    final DateTime? updatedAt,
   }) = _$TaskImpl;
 
   @override
@@ -195,6 +251,10 @@ abstract class _Task implements Task {
   String get title;
   @override
   bool get completed;
+  @override
+  DateTime? get createdAt;
+  @override
+  DateTime? get updatedAt;
 
   /// Create a copy of Task
   /// with the given fields replaced by the non-null parameter values.

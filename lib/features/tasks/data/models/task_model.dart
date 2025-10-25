@@ -14,6 +14,8 @@ class TaskModel with _$TaskModel {
     required int userId,
     required String title,
     required bool completed,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) = _TaskModel;
 
   /// Constructor desde JSON
@@ -27,6 +29,8 @@ class TaskModel with _$TaskModel {
       userId: task.userId,
       title: task.title,
       completed: task.completed,
+      createdAt: task.createdAt,
+      updatedAt: task.updatedAt,
     );
   }
 
@@ -37,6 +41,8 @@ class TaskModel with _$TaskModel {
       userId: userId,
       title: title,
       completed: completed,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
     );
   }
 }

@@ -10,5 +10,7 @@ class Task with _$Task {
     required int userId,
     required String title,
     required bool completed,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) = _Task;
 }

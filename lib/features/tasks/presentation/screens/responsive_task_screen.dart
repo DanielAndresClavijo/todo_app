@@ -106,12 +106,11 @@ class _ResponsiveTaskScreenState extends ConsumerState<ResponsiveTaskScreen> {
 
       if (result != null && mounted) {
         ref.read(taskNotifierProvider.notifier).loadTasks();
-        // En mobile, seleccionar la tarea creada
-        if (screenType == ScreenType.mobile) {
-          setState(() {
-            _selectedTask = result;
-          });
-        }
+        setState(() {
+          _selectedTask = result;
+          // Cerrar sidebar para mostrar el detalle de la tarea creada
+          _isSidebarOpen = false;
+        });
       }
     }
   }

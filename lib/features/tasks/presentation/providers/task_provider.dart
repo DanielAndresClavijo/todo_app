@@ -102,10 +102,20 @@ class TaskNotifier extends StateNotifier<TaskState> {
           database: (msg) => msg,
         ),
       ),
-      (tasks) => state = state.copyWith(
-        status: TaskStatus.loaded,
-        tasks: tasks,
-      ),
+      (tasks) {
+        // Ordenar tareas por fecha de actualización (más reciente primero)
+        final sortedTasks = [...tasks];
+        sortedTasks.sort((a, b) {
+          final aDate = a.updatedAt ?? a.createdAt ?? DateTime(0);
+          final bDate = b.updatedAt ?? b.createdAt ?? DateTime(0);
+          return bDate.compareTo(aDate);
+        });
+        
+        state = state.copyWith(
+          status: TaskStatus.loaded,
+          tasks: sortedTasks,
+        );
+      },
     );
   }
 
@@ -116,7 +126,10 @@ class TaskNotifier extends StateNotifier<TaskState> {
 
   /// Marca una tarea como completada/pendiente
   Future<void> toggleTaskCompletion(Task task) async {
-    final updatedTask = task.copyWith(completed: !task.completed);
+    final updatedTask = task.copyWith(
+      completed: !task.completed,
+      updatedAt: DateTime.now(),
+    );
     
     final result = await _updateTask(updatedTask);
 
@@ -131,13 +144,13 @@ class TaskNotifier extends StateNotifier<TaskState> {
         ),
       ),
       (task) {
-        final updatedTasks = state.tasks.map((t) {
-          return t.id == task.id ? task : t;
-        }).toList().cast<Task>();
+        // Remover la tarea de su posición actual
+        final otherTasks = state.tasks.where((t) => t.id != task.id).toList();
         
+        // Agregar la tarea actualizada al inicio
         state = state.copyWith(
           status: TaskStatus.loaded,
-          tasks: updatedTasks,
+          tasks: [task, ...otherTasks],
         );
       },
     );
@@ -148,11 +161,14 @@ class TaskNotifier extends StateNotifier<TaskState> {
     // Generar un ID único (en producción usarías un UUID o el generado por el servidor)
     final newId = state.tasks.isEmpty ? 1 : state.tasks.map((t) => t.id).reduce((a, b) => a > b ? a : b) + 1;
     
+    final now = DateTime.now();
     final newTask = Task(
       id: newId,
       userId: 1,
       title: title,
       completed: false,
+      createdAt: now,
+      updatedAt: now,
     );
 
     final result = await _createTask(newTask);
@@ -168,9 +184,10 @@ class TaskNotifier extends StateNotifier<TaskState> {
         ),
       ),
       (task) {
+        // Agregar la nueva tarea al inicio de la lista
         state = state.copyWith(
           status: TaskStatus.loaded,
-          tasks: [...state.tasks, task],
+          tasks: [task, ...state.tasks],
         );
       },
     );
@@ -178,7 +195,10 @@ class TaskNotifier extends StateNotifier<TaskState> {
 
   /// Actualiza una tarea existente
   Future<void> updateExistingTask(Task task) async {
-    final result = await _updateTask(task);
+    // Actualizar la fecha de modificación
+    final updatedTask = task.copyWith(updatedAt: DateTime.now());
+    
+    final result = await _updateTask(updatedTask);
 
     result.fold(
       (failure) => state = state.copyWith(
@@ -191,13 +211,13 @@ class TaskNotifier extends StateNotifier<TaskState> {
         ),
       ),
       (updatedTask) {
-        final updatedTasks = state.tasks.map((t) {
-          return t.id == updatedTask.id ? updatedTask : t;
-        }).toList().cast<Task>();
+        // Remover la tarea actualizada de su posición actual
+        final otherTasks = state.tasks.where((t) => t.id != updatedTask.id).toList();
         
+        // Agregar la tarea actualizada al inicio
         state = state.copyWith(
           status: TaskStatus.loaded,
-          tasks: updatedTasks,
+          tasks: [updatedTask, ...otherTasks],
         );
       },
     );
