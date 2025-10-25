@@ -29,17 +29,17 @@ class SidebarNavigation extends ConsumerWidget {
         children: [
           // Header
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(14),
             child: Row(
               children: [
-                Icon(
-                  Icons.home,
-                  color: Theme.of(context).colorScheme.primary,
-                  size: 28,
+                Image.asset(
+                  'assets/ic_launcher.png',
+                  width: 28,
+                  height: 28,
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  'Tareas',
+                  'TODO APP',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.bold,
